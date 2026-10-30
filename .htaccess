@@ -1,0 +1,25 @@
+# Protection des fichiers sensibles (les dossiers src/, tools/, api/ ont leur propre .htaccess)
+<FilesMatch "^(\\.remember|package(-lock)?\\.json|MEMORY\\.md|FINALISATION\\.md|audit-rapport\\.md)$">
+<IfModule mod_authz_core.c>
+    Require all denied
+</IfModule>
+<IfModule !mod_authz_core.c>
+    Order Allow,Deny
+    Deny from all
+</IfModule>
+</FilesMatch>
+
+# Désactivation du listing des répertoires
+Options -Indexes
+
+# En-têtes de sécurité de base
+<IfModule mod_headers.c>
+Header set X-Content-Type-Options nosniff
+Header set X-Frame-Options DENY
+Header set Referrer-Policy "strict-origin-when-cross-origin"
+
+# Cache control pour les ressources statiques
+<FilesMatch "\.(css|js|png|svg|ico|webp)$">
+    Header set Cache-Control "max-age=31536000, public"
+</FilesMatch>
+</IfModule>
